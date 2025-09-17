@@ -1,0 +1,63 @@
+[project]
+name = "python-starter-project"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "google-labs-jules[bot]",email = "161369871+google-labs-jules[bot]@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+]
+
+[tool.poetry]
+packages = [{include = "python_starter_project", from = "src"}]
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.2"
+ruff = "^0.13.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+# Enable the Pyflakes (`F`) and pycodestyle (`E`) rules by default.
+# B for bugbear
+select = ["E", "F", "B"]
+ignore = []
+
+# Allow autofix for all enabled rules (when `--fix`) is used.
+fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+unfixable = []
+
+# Exclude a few common directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+# Same as Black.
+line-length = 88
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
