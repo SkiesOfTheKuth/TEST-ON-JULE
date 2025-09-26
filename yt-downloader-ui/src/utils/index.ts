@@ -1,9 +1,11 @@
-export const YT_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtube\.com\/shorts\/|youtu\.be\/)[^\s]+/i;
-export const isYouTubeUrl = (s) => YT_REGEX.test(String(s).trim());
-export const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-export const pad2 = (n) => String(n).padStart(2, "0");
+import type { Analysis, Format } from '../types';
 
-export function parseHMS(input) {
+export const YT_REGEX: RegExp = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtube\.com\/shorts\/|youtu\.be\/)[^\s]+/i;
+export const isYouTubeUrl = (s: string | null | undefined): boolean => YT_REGEX.test(String(s).trim());
+export const clamp = (n: number, min: number, max: number): number => Math.max(min, Math.min(max, n));
+export const pad2 = (n: number): string => String(n).padStart(2, "0");
+
+export function parseHMS(input: string | null | undefined): number {
   if (!input) return 0;
   const parts = String(input).trim().split(":").map(Number);
   if (parts.some((n) => Number.isNaN(n) || n < 0)) return 0;
@@ -13,7 +15,7 @@ export function parseHMS(input) {
   return 0;
 }
 
-export function formatHMS(totalSeconds = 0) {
+export function formatHMS(totalSeconds: number = 0): string {
   totalSeconds = Math.max(0, Math.floor(totalSeconds));
   const h = Math.floor(totalSeconds / 3600);
   const m = Math.floor((totalSeconds % 3600) / 60);
@@ -21,7 +23,7 @@ export function formatHMS(totalSeconds = 0) {
   return h > 0 ? `${h}:${pad2(m)}:${pad2(s)}` : `${m}:${pad2(s)}`;
 }
 
-export function sanitizeFilename(name) {
+export function sanitizeFilename(name: string): string {
   if (!name) return 'untitled';
   name = name.replace(/[\\/:*?"<>|\x00-\x1F]/g, ' ');
   name = name.replace(/\s+/g, ' ').trim().replace(/^\.+|\.+$/g, '');
@@ -31,8 +33,12 @@ export function sanitizeFilename(name) {
   return name;
 }
 
-export function previewFilename(tpl, meta, fmt, opts = {}) {
-  const tokens = {
+interface PreviewOptions {
+  sanitize?: boolean;
+}
+
+export function previewFilename(tpl: string, meta: Analysis | null, fmt: Format | null, opts: PreviewOptions = {}): string {
+  const tokens: Record<string, string> = {
     '{title}': meta?.title || 'title',
     '{channel}': meta?.channel || 'channel',
     '{res}': fmt?.res || '',

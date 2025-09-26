@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, Select, TextField } from './UI';
 import { useApp } from '../context/AppContext';
 
-export function OptionsSection() {
+export const OptionsSection: React.FC = () => {
   const {
     analysis,
     mode, setMode,
@@ -30,7 +30,7 @@ export function OptionsSection() {
       <div className="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white dark:bg-slate-950 p-4 sm:p-6 shadow-sm">
         <h3 className="font-semibold mb-3">Download options</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Select label="Mode" value={mode} onChange={setMode} options={[{ value: "video+audio", label: "Video + Audio" }, { value: "video-only", label: "Video only" }, { value: "audio-only", label: "Audio only" }]}/>
+          <Select label="Mode" value={mode} onChange={(v) => setMode(v as any)} options={[{ value: "video+audio", label: "Video + Audio" }, { value: "video-only", label: "Video only" }, { value: "audio-only", label: "Audio only" }]}/>
           <Select label="Container" value={format} onChange={setFormat} options={[{ value: "auto", label: "Auto" }, { value: "mp4", label: "MP4" }, { value: "webm", label: "WebM" }, { value: "m4a", label: "M4A" }, { value: "mp3", label: "MP3" }, { value: "opus", label: "Opus" }]}/>
           <Select label="Resolution" value={res} onChange={setRes} options={[{ value: "auto", label: "Auto" }, { value: "2160p", label: "4K" }, { value: "1440p", label: "2K" }, { value: "1080p", label: "1080p" }, { value: "720p", label: "720p" }]}/>
           <Select label="Frame rate" value={fps} onChange={setFps} options={[{ value: "auto", label: "Auto" }, { value: "60", label: "60 fps" }, { value: "30", label: "30 fps" }]}/>
@@ -55,14 +55,14 @@ export function OptionsSection() {
             <legend className="text-sm font-medium text-slate-600 dark:text-slate-300">Subtitles</legend>
             <label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={subtitles.enabled} onChange={e => setSubtitles({ ...subtitles, enabled: e.target.checked })}/> Include</label>
             {subtitles.enabled && <div className="flex items-center gap-2">
-              <Select small value={subtitles.lang} onChange={v => setSubtitles({ ...subtitles, lang: v })} options={[{ value: "en", label: "English" }, { value: "es", label: "Spanish" }]}/>
+              <Select small label="" value={subtitles.lang} onChange={v => setSubtitles({ ...subtitles, lang: v })} options={[{ value: "en", label: "English" }, { value: "es", label: "Spanish" }]}/>
               <label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={subtitles.burnIn} onChange={e => setSubtitles({ ...subtitles, burnIn: e.target.checked })}/> Burn-in</label>
             </div>}
           </fieldset>
           <fieldset className="space-y-2">
             <legend className="text-sm font-medium text-slate-600 dark:text-slate-300">Thumbnail</legend>
             <label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={thumb.enabled} onChange={e => setThumb({ ...thumb, enabled: e.target.checked })}/> Save</label>
-            {thumb.enabled && <Select small value={thumb.size} onChange={v => setThumb({ ...thumb, size: v })} options={[{ value: "maxres", label: "Max" }, { value: "hq", label: "HQ" }]}/>}
+            {thumb.enabled && <Select small label="" value={thumb.size} onChange={v => setThumb({ ...thumb, size: v })} options={[{ value: "maxres", label: "Max" }, { value: "hq", label: "HQ" }]}/>}
           </fieldset>
           <fieldset className="space-y-2 sm:col-span-2">
             <legend className="text-sm font-medium text-slate-600 dark:text-slate-300">Queue</legend>

@@ -1,16 +1,19 @@
 import { parseHMS, isYouTubeUrl, sanitizeFilename, previewFilename, formatHMS } from './index';
+import type { QATest, Analysis, Format } from '../types';
 
-export function runQATests() {
-  const cases = [];
-  const add = (name, fn) => {
+export function runQATests(): QATest[] {
+  const cases: QATest[] = [];
+
+  const add = (name: string, fn: () => void): void => {
     try {
       fn();
       cases.push({ name, ok: true, msg: "" });
-    } catch (e) {
+    } catch (e: any) {
       cases.push({ name, ok: false, msg: e.message });
     }
   };
-  const eq = (a, b) => {
+
+  const eq = (a: any, b: any): void => {
     const sa = JSON.stringify(a);
     const sb = JSON.stringify(b);
     if (sa !== sb) throw new Error(`Expected ${sb}, got ${sa}`);
@@ -46,13 +49,13 @@ export function runQATests() {
   add("sanitize: long name", () => eq(sanitizeFilename("a".repeat(200)).length, 150));
 
   // --- Test previewFilename ---
-  const mockMeta = { title: "Title", channel: "Channel" };
-  const mockFmt = { res: "1080p", fps: 60, container: "mp4" };
-  add("preview: basic", () => eq(previewFilename("{title} - {channel}", mockMeta, mockFmt), "Title - Channel"));
-  add("preview: with res", () => eq(previewFilename("{title} ({res})", mockMeta, mockFmt), "Title (1080p)"));
-  add("preview: with sanitize", () => eq(previewFilename("{title}: illegal", { ...mockMeta, title: "Title:"}, mockFmt, { sanitize: true }), "Title illegal"));
-  add("preview: empty parens", () => eq(previewFilename("{title} ({res})", mockMeta, { ...mockFmt, res: ""}), "Title"));
-  add("preview: dangling separator", () => eq(previewFilename("{title} - {res}", mockMeta, { ...mockFmt, res: ""}), "Title"));
+  const mockMeta: Partial<Analysis> = { title: "Title", channel: "Channel" };
+  const mockFmt: Partial<Format> = { res: "1080p", fps: 60, container: "mp4" };
+  add("preview: basic", () => eq(previewFilename("{title} - {channel}", mockMeta as Analysis, mockFmt as Format), "Title - Channel"));
+  add("preview: with res", () => eq(previewFilename("{title} ({res})", mockMeta as Analysis, mockFmt as Format), "Title (1080p)"));
+  add("preview: with sanitize", () => eq(previewFilename("{title}: illegal", { ...mockMeta, title: "Title:"} as Analysis, mockFmt as Format, { sanitize: true }), "Title illegal"));
+  add("preview: empty parens", () => eq(previewFilename("{title} ({res})", mockMeta as Analysis, { ...mockFmt, res: ""} as Format), "Title"));
+  add("preview: dangling separator", () => eq(previewFilename("{title} - {res}", mockMeta as Analysis, { ...mockFmt, res: ""} as Format), "Title"));
 
   return cases;
 }

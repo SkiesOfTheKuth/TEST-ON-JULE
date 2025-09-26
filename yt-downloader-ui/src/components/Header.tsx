@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from './UI';
 import { useApp } from '../context/AppContext';
 
-export function Header() {
+export const Header: React.FC = () => {
   const { dark, setDark, compact, setCompact } = useApp();
 
   return (

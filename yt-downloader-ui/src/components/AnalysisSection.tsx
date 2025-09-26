@@ -3,7 +3,7 @@ import { Badge, cx } from './UI';
 import { formatHMS } from '../utils';
 import { useApp } from '../context/AppContext';
 
-function VideoPreview() {
+const VideoPreview: React.FC = () => {
   const { analysis, mode, format, res, fps, enableTrim, start, end, subtitles } = useApp();
 
   if (!analysis) {
@@ -35,7 +35,7 @@ function VideoPreview() {
   );
 }
 
-function FormatList() {
+const FormatList: React.FC = () => {
   const { analysis, filteredFormats, bestFormat } = useApp();
 
   return (
@@ -79,7 +79,7 @@ function FormatList() {
   );
 }
 
-export function AnalysisSection() {
+export const AnalysisSection: React.FC = () => {
   return (
     <div className="lg:col-span-7 space-y-4">
       <VideoPreview />

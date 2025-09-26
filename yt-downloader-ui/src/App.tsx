@@ -1,8 +1,9 @@
+import React from 'react';
 import YouTubeDownloaderUI from './YouTubeDownloader';
 import { AppProvider } from './context/AppContext';
 import './index.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <AppProvider>
       <YouTubeDownloaderUI />

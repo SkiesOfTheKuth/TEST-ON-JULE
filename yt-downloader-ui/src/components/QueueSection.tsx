@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, cx } from './UI';
 import { useApp } from '../context/AppContext';
 
-export function QueueSection() {
+export const QueueSection: React.FC = () => {
   const {
     queue,
     startItem,

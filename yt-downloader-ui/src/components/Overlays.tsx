@@ -1,8 +1,14 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { Kbd, cx } from './UI';
+import type { QATest, Toast } from '../types';
 
-export function HelpOverlay({ open, onClose }) {
+interface OverlayProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export const HelpOverlay: React.FC<OverlayProps> = ({ open, onClose }) => {
   if (!open) return null;
   return createPortal(
     <div className="fixed inset-0 z-50">
@@ -24,7 +30,11 @@ export function HelpOverlay({ open, onClose }) {
   );
 }
 
-export function QAPanel({ open, onClose, tests }) {
+interface QAPanelProps extends OverlayProps {
+  tests: QATest[];
+}
+
+export const QAPanel: React.FC<QAPanelProps> = ({ open, onClose, tests }) => {
   if (!open) return null;
   return createPortal(
     <div className="fixed right-3 bottom-3 z-50 w-80 bg-white dark:bg-slate-950 rounded-2xl shadow-xl border border-slate-200/70 dark:border-slate-800/70 p-4 text-xs">
@@ -46,8 +56,12 @@ export function QAPanel({ open, onClose, tests }) {
   );
 }
 
-export function ToastContainer({ toasts }) {
-  const colors = {
+interface ToastContainerProps {
+  toasts: Toast[];
+}
+
+export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts }) => {
+  const colors: Record<Toast['type'], string> = {
     info: "border-blue-500/50",
     success: "border-emerald-500/50",
     error: "border-red-500/50",

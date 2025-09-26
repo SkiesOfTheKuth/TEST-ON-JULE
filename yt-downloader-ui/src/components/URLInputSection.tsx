@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { DragEvent } from 'react';
 import { Icon, Kbd, cx } from './UI';
 import { useApp } from '../context/AppContext';
 
-function prevent(e) { e.preventDefault(); }
+function prevent(e: React.SyntheticEvent) { e.preventDefault(); }
 
-export function URLInputSection() {
+export const URLInputSection: React.FC = () => {
   const {
     url, setUrl,
     multi, setMulti,
@@ -17,7 +17,7 @@ export function URLInputSection() {
     queue,
   } = useApp();
 
-  function handleDrop(ev) {
+  function handleDrop(ev: DragEvent<HTMLDivElement>) {
     ev.preventDefault();
     const text = ev.dataTransfer.getData("text");
     if (text) text.split(/\s+/).forEach(addUrl);

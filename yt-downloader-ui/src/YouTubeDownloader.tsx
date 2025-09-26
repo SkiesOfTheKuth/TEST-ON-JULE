@@ -7,7 +7,7 @@ import { OptionsSection } from './components/OptionsSection';
 import { QueueSection } from './components/QueueSection';
 import { HelpOverlay, QAPanel, ToastContainer } from './components/Overlays';
 
-export default function YouTubeDownloaderUI() {
+const YouTubeDownloaderUI: React.FC = () => {
   const { showHelp, setShowHelp, showQAPanel, setShowQAPanel, qaTests, toasts } = useApp();
 
   return (
@@ -35,3 +35,5 @@ export default function YouTubeDownloaderUI() {
     </div>
   );
 }
+
+export default YouTubeDownloaderUI;
