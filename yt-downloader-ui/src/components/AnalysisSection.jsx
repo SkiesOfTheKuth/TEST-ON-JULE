@@ -1,13 +1,6 @@
 import React from 'react';
 import { Badge, cx } from './UI';
-
-function formatHMS(totalSeconds = 0) {
-  totalSeconds = Math.max(0, Math.floor(totalSeconds));
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
-  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}` : `${m}:${String(s).padStart(2, "0")}`;
-}
+import { formatHMS } from '../utils';
 
 function VideoPreview({ analysis, mode, format, res, fps, enableTrim, start, end, subtitles }) {
   if (!analysis) {

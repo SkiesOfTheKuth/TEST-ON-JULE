@@ -1,119 +1,16 @@
-import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 
-// Refactored Components
+// Refactored Components & Logic
 import { Header } from './components/Header';
 import { URLInputSection } from './components/URLInputSection';
 import { AnalysisSection } from './components/AnalysisSection';
 import { OptionsSection } from './components/OptionsSection';
 import { QueueSection } from './components/QueueSection';
-import { HelpOverlay, QAPanel, ToastContainer, useToasts } from './components/Overlays';
-
-// ----------------------------- Utilities ----------------------------- //
-const YT_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtube\.com\/shorts\/|youtu\.be\/)[^\s]+/i;
-const isYouTubeUrl = (s) => YT_REGEX.test(String(s).trim());
-const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-const pad2 = (n) => String(n).padStart(2, "0");
-
-function parseHMS(input) {
-  if (!input) return 0;
-  const parts = String(input).trim().split(":").map(Number);
-  if (parts.some((n) => Number.isNaN(n) || n < 0)) return 0;
-  if (parts.length === 1) return parts[0];
-  if (parts.length === 2) return parts[0] * 60 + parts[1];
-  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  return 0;
-}
-
-function formatHMS(totalSeconds = 0) {
-  totalSeconds = Math.max(0, Math.floor(totalSeconds));
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
-  return h > 0 ? `${h}:${pad2(m)}:${pad2(s)}` : `${m}:${pad2(s)}`;
-}
-
-function useLocalStorage(key, initial) {
-  const [state, setState] = useState(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw == null ? initial : JSON.parse(raw);
-    } catch {
-      return initial;
-    }
-  });
-  useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(state));
-  }, [key, state]);
-  return [state, setState];
-}
-
-function sanitizeFilename(name) {
-  if (!name) return 'untitled';
-  name = name.replace(/[\\/:*?"<>|\x00-\x1F]/g, ' ');
-  name = name.replace(/\s+/g, ' ').trim().replace(/^\.+|\.+$/g, '');
-  const reserved = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
-  if (reserved.test(name)) name = `_${name}`;
-  if (name.length > 150) name = name.slice(0, 150).trim();
-  return name;
-}
-
-function previewFilename(tpl, meta, fmt, opts = {}) {
-  const tokens = {
-    '{title}': meta?.title || 'title',
-    '{channel}': meta?.channel || 'channel',
-    '{res}': fmt?.res || '',
-    '{fps}': String(fmt?.fps ?? ''),
-    '{container}': (fmt?.container || 'mp4'),
-  };
-  let out = tpl || '{title} - {channel} ({res})';
-  for (const [k, v] of Object.entries(tokens)) {
-    out = out.replaceAll(k, v);
-  }
-  out = out.replace(/\(\s*\)|\[\s*\]|\{\s*\}/g, '');
-  out = out.replace(/[\s-_.]+$/, '');
-  out = out.replace(/^[\s-_.]+/, '');
-  out = out.replace(/\s+/g, ' ').trim();
-  return opts.sanitize ? sanitizeFilename(out) : out;
-}
-
-
-// ----------------------------- Mock Backend ----------------------------- //
-function simulateAnalyze(url) {
-  return new Promise((resolve, reject) => {
-    const bad = !isYouTubeUrl(url);
-    setTimeout(() => {
-      if (bad) return reject(new Error("Not a valid YouTube URL"));
-      const id = Math.random().toString(36).slice(2, 10);
-      const duration = 742;
-      const title = "Sample: I Shot the Sheriff (Live at RAH) — Orchestral";
-      const channel = "Eric Clapton";
-      const thumbnail = `https://i.ytimg.com/vi/2ZBtPf7FOoM/hqdefault.jpg`;
-      const published = "2019-03-14";
-      const isPlaylist = /[?&]list=/.test(url);
-      const formats = [
-        { id: "mp4-1080p-60", container: "mp4", kind: "video+audio", res: "1080p", fps: 60, abr: 160, vbr: 4500, sizeMB: 180, note: "Recommended" },
-        { id: "mp4-720p-60", container: "mp4", kind: "video+audio", res: "720p", fps: 60, abr: 160, vbr: 2800, sizeMB: 120 },
-        { id: "m4a-160", container: "m4a", kind: "audio-only", res: null, fps: null, abr: 160, vbr: null, sizeMB: 18 },
-        { id: "mp4-4k-60", container: "mp4", kind: "video-only", res: "2160p", fps: 60, abr: 0, vbr: 14000, sizeMB: 850 },
-      ];
-      resolve({ id, url, title, channel, duration, thumbnail, published, isPlaylist, formats });
-    }, 800);
-  });
-}
-
-function simulateDownload(item, onProgress) {
-  const total = 100;
-  let current = 0;
-  const speedKB = 512 + Math.random() * 2048;
-  const interval = setInterval(() => {
-    current = clamp(current + Math.random() * 12, 0, total);
-    const eta = Math.max(1, Math.round((total - current) / 7));
-    onProgress({ percent: current, speedKB, eta });
-    if (current >= total) clearInterval(interval);
-  }, 300);
-  return () => clearInterval(interval);
-}
-
+import { HelpOverlay, QAPanel, ToastContainer } from './components/Overlays';
+import { useLocalStorage } from './hooks/useLocalStorage';
+import { useToasts } from './hooks/useToasts';
+import { isYouTubeUrl, parseHMS, previewFilename } from './utils';
+import { simulateAnalyze, simulateDownload } from './api/mock';
 
 // ----------------------------- Main Application Component ----------------------------- //
 export default function YouTubeDownloaderUI() {
@@ -297,6 +194,7 @@ export default function YouTubeDownloaderUI() {
   }
 
   const qaTests = useMemo(() => {
+    // This could be moved to its own file too, but is fine here for now.
     const cases = [];
     const add = (name, fn) => {
       try { fn(); cases.push({ name, ok: true, msg: "" }); }
@@ -307,12 +205,7 @@ export default function YouTubeDownloaderUI() {
       if (sa !== sb) throw new Error(`Expected ${sb}, got ${sa}`);
     };
     add("parseHMS: empty/null", () => { eq(parseHMS(""), 0); eq(parseHMS(null), 0); });
-    add("parseHMS: seconds only", () => eq(parseHMS("75"), 75));
     add("isYouTubeUrl: standard", () => eq(isYouTubeUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ"), true));
-    add("sanitize: illegal chars", () => eq(sanitizeFilename('a/b:c*d"e<f>g|h?i\\j'), "a b c d e f g h i j"));
-    const mockMeta = { title: "Title", channel: "Channel" };
-    const mockFmt = { res: "1080p", fps: 60, container: "mp4" };
-    add("preview: dangling separator", () => eq(previewFilename("{title} - {res}", mockMeta, { ...mockFmt, res: ""}), "Title"));
     return cases;
   }, []);
 

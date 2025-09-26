@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 import { Kbd, cx } from './UI';
 
@@ -45,18 +45,6 @@ export function QAPanel({ open, onClose, tests }) {
     document.body
   );
 }
-
-export const useToasts = (timeout = 3000) => {
-  const [toasts, setToasts] = useState([]);
-  const addToast = useCallback((message, type = 'info') => {
-    const id = Math.random().toString(36).slice(2);
-    setToasts(current => [...current, { id, message, type }]);
-    setTimeout(() => {
-      setToasts(current => current.filter(t => t.id !== id));
-    }, timeout);
-  }, [timeout]);
-  return { toasts, addToast };
-};
 
 export function ToastContainer({ toasts }) {
   const colors = {
