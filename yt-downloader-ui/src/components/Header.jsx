@@ -1,7 +1,10 @@
 import React from 'react';
 import { Icon } from './UI';
+import { useApp } from '../context/AppContext';
 
-export function Header({ dark, setDark, compact, setCompact }) {
+export function Header() {
+  const { dark, setDark, compact, setCompact } = useApp();
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/60 dark:border-slate-800/60 backdrop-blur bg-white/70 dark:bg-slate-950/70">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-3">

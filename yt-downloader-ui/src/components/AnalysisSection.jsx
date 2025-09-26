@@ -1,8 +1,11 @@
 import React from 'react';
 import { Badge, cx } from './UI';
 import { formatHMS } from '../utils';
+import { useApp } from '../context/AppContext';
 
-function VideoPreview({ analysis, mode, format, res, fps, enableTrim, start, end, subtitles }) {
+function VideoPreview() {
+  const { analysis, mode, format, res, fps, enableTrim, start, end, subtitles } = useApp();
+
   if (!analysis) {
     return (
       <div className="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white dark:bg-slate-950 p-4 sm:p-6 shadow-sm min-h-[160px]">
@@ -32,54 +35,55 @@ function VideoPreview({ analysis, mode, format, res, fps, enableTrim, start, end
   );
 }
 
-function FormatList({ analysis, filteredFormats, chosenFormat }) {
-    return (
-        <div className="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white dark:bg-slate-950 p-4 sm:p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-                <h3 className="font-semibold">Available formats</h3>
-                <div className="text-xs text-slate-500">{filteredFormats.length} match{filteredFormats.length !== 1 && "es"}</div>
-            </div>
-            {!analysis ? <div className="h-24 grid place-items-center text-slate-500 dark:text-slate-400">Analyze a URL to see formats.</div> :
-             !filteredFormats.length ? <div className="h-24 grid place-items-center text-slate-500 dark:text-slate-400">No formats match filters.</div> :
-              <div className="mt-3 overflow-x-auto">
-                  <table className="w-full text-sm">
-                      <thead className="text-left text-slate-600 dark:text-slate-300">
-                          <tr className="border-b border-slate-200/70 dark:border-slate-800/70">
-                              <th className="py-2 pr-3">Container</th>
-                              <th className="py-2 pr-3">Type</th>
-                              <th className="py-2 pr-3">Resolution</th>
-                              <th className="py-2 pr-3">FPS</th>
-                              <th className="py-2 pr-3">Audio</th>
-                              <th className="py-2 pr-3">~Size</th>
-                              <th className="py-2 pr-3">Note</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {filteredFormats.map(f => (
-                              <tr key={f.id} className={cx("border-b border-slate-100/60 dark:border-slate-800/50", chosenFormat?.id === f.id && "bg-blue-50/60 dark:bg-blue-950/40")}>
-                                  <td className="py-2 pr-3 font-medium">{f.container}</td>
-                                  <td className="py-2 pr-3">{f.kind}</td>
-                                  <td className="py-2 pr-3">{f.res || "—"}</td>
-                                  <td className="py-2 pr-3">{f.fps || "—"}</td>
-                                  <td className="py-2 pr-3">{f.abr ? `${f.abr} kbps` : "—"}</td>
-                                  <td className="py-2 pr-3">{f.sizeMB ? `${f.sizeMB} MB` : "—"}</td>
-                                  <td className="py-2 pr-3 text-slate-500">{f.note || ""}</td>
-                              </tr>
-                          ))}
-                      </tbody>
-                  </table>
-              </div>
-            }
+function FormatList() {
+  const { analysis, filteredFormats, bestFormat } = useApp();
+
+  return (
+    <div className="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white dark:bg-slate-950 p-4 sm:p-6 shadow-sm">
+        <div className="flex items-center justify-between">
+            <h3 className="font-semibold">Available formats</h3>
+            <div className="text-xs text-slate-500">{filteredFormats.length} match{filteredFormats.length !== 1 && "es"}</div>
         </div>
-    );
+        {!analysis ? <div className="h-24 grid place-items-center text-slate-500 dark:text-slate-400">Analyze a URL to see formats.</div> :
+         !filteredFormats.length ? <div className="h-24 grid place-items-center text-slate-500 dark:text-slate-400">No formats match filters.</div> :
+          <div className="mt-3 overflow-x-auto">
+              <table className="w-full text-sm">
+                  <thead className="text-left text-slate-600 dark:text-slate-300">
+                      <tr className="border-b border-slate-200/70 dark:border-slate-800/70">
+                          <th className="py-2 pr-3">Container</th>
+                          <th className="py-2 pr-3">Type</th>
+                          <th className="py-2 pr-3">Resolution</th>
+                          <th className="py-2 pr-3">FPS</th>
+                          <th className="py-2 pr-3">Audio</th>
+                          <th className="py-2 pr-3">~Size</th>
+                          <th className="py-2 pr-3">Note</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {filteredFormats.map(f => (
+                          <tr key={f.id} className={cx("border-b border-slate-100/60 dark:border-slate-800/50", bestFormat?.id === f.id && "bg-blue-50/60 dark:bg-blue-950/40")}>
+                              <td className="py-2 pr-3 font-medium">{f.container}</td>
+                              <td className="py-2 pr-3">{f.kind}</td>
+                              <td className="py-2 pr-3">{f.res || "—"}</td>
+                              <td className="py-2 pr-3">{f.fps || "—"}</td>
+                              <td className="py-2 pr-3">{f.abr ? `${f.abr} kbps` : "—"}</td>
+                              <td className="py-2 pr-3">{f.sizeMB ? `${f.sizeMB} MB` : "—"}</td>
+                              <td className="py-2 pr-3 text-slate-500">{f.note || ""}</td>
+                          </tr>
+                      ))}
+                  </tbody>
+              </table>
+          </div>
+        }
+    </div>
+  );
 }
 
-
-export function AnalysisSection({ analysis, filteredFormats, chosenFormat, ...previewProps }) {
+export function AnalysisSection() {
   return (
     <div className="lg:col-span-7 space-y-4">
-      <VideoPreview analysis={analysis} {...previewProps} />
-      <FormatList analysis={analysis} filteredFormats={filteredFormats} chosenFormat={chosenFormat} />
+      <VideoPreview />
+      <FormatList />
     </div>
   );
 }

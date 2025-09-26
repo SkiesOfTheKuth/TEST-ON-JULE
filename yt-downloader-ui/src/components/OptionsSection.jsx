@@ -1,27 +1,30 @@
 import React from 'react';
 import { Icon, Select, TextField } from './UI';
+import { useApp } from '../context/AppContext';
 
-export function OptionsSection({
-  analysis,
-  mode, setMode,
-  format, setFormat,
-  res, setRes,
-  fps, setFps,
-  abr, setAbr,
-  filenameTpl, setFilenameTpl,
-  filenamePreview,
-  sanitize, setSanitize,
-  enableTrim, setEnableTrim,
-  start, setStart,
-  end, setEnd,
-  trimState,
-  subtitles, setSubtitles,
-  thumb, setThumb,
-  concurrency, setConcurrency,
-  handleAddToQueue,
-  startAll,
-  queue,
-}) {
+export function OptionsSection() {
+  const {
+    analysis,
+    mode, setMode,
+    format, setFormat,
+    res, setRes,
+    fps, setFps,
+    abr, setAbr,
+    filenameTpl, setFilenameTpl,
+    filenamePreview,
+    sanitize, setSanitize,
+    enableTrim, setEnableTrim,
+    start, setStart,
+    end, setEnd,
+    trimState,
+    subtitles, setSubtitles,
+    thumb, setThumb,
+    concurrency, setConcurrency,
+    handleAddToQueue,
+    startAll,
+    queue,
+  } = useApp();
+
   return (
     <div className="lg:col-span-5 space-y-4">
       <div className="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white dark:bg-slate-950 p-4 sm:p-6 shadow-sm">

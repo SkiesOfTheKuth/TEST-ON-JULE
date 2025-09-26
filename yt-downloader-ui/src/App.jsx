@@ -1,9 +1,12 @@
 import YouTubeDownloaderUI from './YouTubeDownloader';
-import './index.css'; // We'll put Tailwind directives here
+import { AppProvider } from './context/AppContext';
+import './index.css';
 
 function App() {
   return (
-    <YouTubeDownloaderUI />
+    <AppProvider>
+      <YouTubeDownloaderUI />
+    </AppProvider>
   );
 }
 

@@ -1,22 +1,22 @@
 import React from 'react';
 import { Icon, Kbd, cx } from './UI';
+import { useApp } from '../context/AppContext';
 
 function prevent(e) { e.preventDefault(); }
 
-export function URLInputSection({
-  url,
-  setUrl,
-  multi,
-  setMulti,
-  error,
-  setError,
-  isPlaylist,
-  canAnalyze,
-  analyzing,
-  handleAnalyze,
-  addUrl,
-  queue,
-}) {
+export function URLInputSection() {
+  const {
+    url, setUrl,
+    multi, setMulti,
+    error, setError,
+    isPlaylist,
+    canAnalyze,
+    analyzing,
+    handleAnalyze,
+    addUrl,
+    queue,
+  } = useApp();
+
   function handleDrop(ev) {
     ev.preventDefault();
     const text = ev.dataTransfer.getData("text");

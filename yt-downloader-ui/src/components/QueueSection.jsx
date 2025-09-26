@@ -1,14 +1,17 @@
 import React from 'react';
 import { Icon, cx } from './UI';
+import { useApp } from '../context/AppContext';
 
-export function QueueSection({
-  queue,
-  startItem,
-  cancelItem,
-  removeItem,
-  startAll,
-  clearFinished,
-}) {
+export function QueueSection() {
+  const {
+    queue,
+    startItem,
+    cancelItem,
+    removeItem,
+    startAll,
+    clearFinished,
+  } = useApp();
+
   return (
     <section className="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white dark:bg-slate-950 p-4 sm:p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4">
