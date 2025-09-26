@@ -10,6 +10,7 @@ import { HelpOverlay, QAPanel, ToastContainer } from './components/Overlays';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useToasts } from './hooks/useToasts';
 import { isYouTubeUrl, parseHMS, previewFilename } from './utils';
+import { runQATests } from './utils/qaTests';
 import { simulateAnalyze, simulateDownload } from './api/mock';
 
 // ----------------------------- Main Application Component ----------------------------- //
@@ -193,21 +194,7 @@ export default function YouTubeDownloaderUI() {
     setQueue(prev => prev.filter(q => q.status !== "finished"));
   }
 
-  const qaTests = useMemo(() => {
-    // This could be moved to its own file too, but is fine here for now.
-    const cases = [];
-    const add = (name, fn) => {
-      try { fn(); cases.push({ name, ok: true, msg: "" }); }
-      catch (e) { cases.push({ name, ok: false, msg: e.message }); }
-    };
-    const eq = (a, b) => {
-      const sa = JSON.stringify(a); const sb = JSON.stringify(b);
-      if (sa !== sb) throw new Error(`Expected ${sb}, got ${sa}`);
-    };
-    add("parseHMS: empty/null", () => { eq(parseHMS(""), 0); eq(parseHMS(null), 0); });
-    add("isYouTubeUrl: standard", () => eq(isYouTubeUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ"), true));
-    return cases;
-  }, []);
+  const qaTests = useMemo(() => runQATests(), []);
 
   // JSX Render
   return (
