@@ -8,6 +8,9 @@ interface OverlayProps {
   onClose: () => void;
 }
 
+/**
+ * A modal overlay that displays keyboard shortcuts and other help information.
+ */
 export const HelpOverlay: React.FC<OverlayProps> = ({ open, onClose }) => {
   if (!open) return null;
   return createPortal(
@@ -34,6 +37,9 @@ interface QAPanelProps extends OverlayProps {
   tests: QATest[];
 }
 
+/**
+ * A panel that displays the results of the internal QA test suite.
+ */
 export const QAPanel: React.FC<QAPanelProps> = ({ open, onClose, tests }) => {
   if (!open) return null;
   return createPortal(
@@ -60,6 +66,9 @@ interface ToastContainerProps {
   toasts: Toast[];
 }
 
+/**
+ * A container that displays toast notifications at the bottom of the screen.
+ */
 export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts }) => {
   const colors: Record<Toast['type'], string> = {
     info: "border-blue-500/50",

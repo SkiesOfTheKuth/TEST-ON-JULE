@@ -2,6 +2,10 @@ import React from 'react';
 import { Icon, cx } from './UI';
 import { useApp } from '../context/AppContext';
 
+/**
+ * A component section that displays the list of items in the download queue.
+ * It provides controls for starting, canceling, and removing items, as well as managing the overall queue.
+ */
 export const QueueSection: React.FC = () => {
   const {
     queue,

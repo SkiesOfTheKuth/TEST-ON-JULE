@@ -3,24 +3,38 @@ import { useLocalStorage } from './useLocalStorage';
 import { parseHMS, previewFilename } from '../utils';
 import type { Analysis, Format, Subtitles, ThumbnailOptions, DownloadOptions } from '../types';
 
+/**
+ * A custom hook to manage all user-configurable download options.
+ * This includes format, quality, trimming, subtitles, and filename settings.
+ * It also computes derived state based on these options, such as the list of available formats.
+ * @param analysis The current video analysis object, or null if no analysis has been performed.
+ * @returns An object containing the download options state, setters, and derived values.
+ */
 export function useDownloadOptions(analysis: Analysis | null) {
+  // --- Core media options ---
   const [mode, setMode] = useLocalStorage<'video+audio' | 'video-only' | 'audio-only'>('ytui_mode', 'video+audio');
   const [format, setFormat] = useLocalStorage('ytui_format', 'auto');
   const [res, setRes] = useLocalStorage('ytui_res', 'auto');
   const [fps, setFps] = useLocalStorage('ytui_fps', 'auto');
   const [abr, setAbr] = useLocalStorage('ytui_abr', 160);
 
+  // --- Trimming options ---
   const [start, setStart] = useLocalStorage('ytui_trim_start', '');
   const [end, setEnd] = useLocalStorage('ytui_trim_end', '');
   const [enableTrim, setEnableTrim] = useLocalStorage('ytui_trim_enable', false);
 
+  // --- Extra options ---
   const [subtitles, setSubtitles] = useLocalStorage<Subtitles>('ytui_subs', { enabled: false, lang: 'en', burnIn: false });
   const [thumb, setThumb] = useLocalStorage<ThumbnailOptions>('ytui_thumb', { enabled: false, size: 'maxres' });
 
+  // --- Filename options ---
   const [filenameTpl, setFilenameTpl] = useLocalStorage('ytui_tpl', '{title} - {channel} ({res})');
   const [sanitize, setSanitize] = useLocalStorage('ytui_sanitize', true);
   const [filenamePreview, setFilenamePreview] = useState('');
 
+  /**
+   * A memoized list of formats that match the user's current filter settings (mode, format, res, etc.).
+   */
   const filteredFormats = useMemo<Format[]>(() => {
     if (!analysis) return [];
     return analysis.formats.filter((f) => {
@@ -33,6 +47,9 @@ export function useDownloadOptions(analysis: Analysis | null) {
     });
   }, [analysis, mode, format, res, fps, abr]);
 
+  /**
+   * The best-matching format based on the current filters, used as a default selection.
+   */
   const bestFormat = useMemo<Format | null>(() => {
     if (!filteredFormats.length) return null;
     const rec = filteredFormats.find((f) => /recommended/i.test(f.note || ''));
@@ -41,6 +58,9 @@ export function useDownloadOptions(analysis: Analysis | null) {
     return [...filteredFormats].sort((a, b) => resRank(b.res) - resRank(a.res) || (b.fps || 0) - (a.fps || 0) || (b.abr || 0) - (a.abr || 0))[0];
   }, [filteredFormats]);
 
+  /**
+   * The validation state of the current trim settings.
+   */
   const trimState = useMemo(() => {
     if (!enableTrim) return { ok: true };
     const s = parseHMS(start);
@@ -51,6 +71,7 @@ export function useDownloadOptions(analysis: Analysis | null) {
     return { ok: true };
   }, [enableTrim, start, end, analysis]);
 
+  // Effect to update the filename preview whenever the template or related options change.
   useEffect(() => {
     if (!analysis) {
       setFilenamePreview('');
@@ -60,6 +81,11 @@ export function useDownloadOptions(analysis: Analysis | null) {
     setFilenamePreview(p);
   }, [analysis, filenameTpl, sanitize, bestFormat]);
 
+  /**
+   * Builds the final set of download options for a queue item.
+   * @param meta The video analysis object.
+   * @returns The fully constructed DownloadOptions object.
+   */
   const buildOptions = (meta: Analysis): DownloadOptions => {
     const fmt = bestFormat;
     return {

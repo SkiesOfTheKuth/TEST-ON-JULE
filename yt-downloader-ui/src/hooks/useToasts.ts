@@ -8,6 +8,11 @@ interface UseToastsReturn {
   addToast: AddToastFn;
 }
 
+/**
+ * A custom hook for managing a list of toast notifications.
+ * @param timeout The duration in milliseconds before a toast automatically disappears.
+ * @returns An object containing the current list of toasts and a function to add a new one.
+ */
 export const useToasts = (timeout: number = 3000): UseToastsReturn => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 

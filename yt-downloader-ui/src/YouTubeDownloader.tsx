@@ -7,6 +7,11 @@ import { OptionsSection } from './components/OptionsSection';
 import { QueueSection } from './components/QueueSection';
 import { HelpOverlay, QAPanel, ToastContainer } from './components/Overlays';
 
+/**
+ * The main UI component for the YouTube Downloader application.
+ * This component acts as a container, assembling all the different UI sections
+ * and providing the application's overall layout.
+ */
 const YouTubeDownloaderUI: React.FC = () => {
   const { showHelp, setShowHelp, showQAPanel, setShowQAPanel, qaTests, toasts } = useApp();
 

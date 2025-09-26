@@ -2,6 +2,10 @@ import React from 'react';
 import { Icon, Select, TextField } from './UI';
 import { useApp } from '../context/AppContext';
 
+/**
+ * A component section that displays all user-configurable download options.
+ * This includes settings for format, quality, trimming, subtitles, and filenames.
+ */
 export const OptionsSection: React.FC = () => {
   const {
     analysis,

@@ -2,6 +2,10 @@ import React from 'react';
 import { Icon } from './UI';
 import { useApp } from '../context/AppContext';
 
+/**
+ * The main header component for the application.
+ * Displays the application title and controls for theme and layout.
+ */
 export const Header: React.FC = () => {
   const { dark, setDark, compact, setCompact } = useApp();
 

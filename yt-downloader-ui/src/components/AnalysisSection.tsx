@@ -3,6 +3,10 @@ import { Badge, cx } from './UI';
 import { formatHMS } from '../utils';
 import { useApp } from '../context/AppContext';
 
+/**
+ * Displays the video thumbnail, title, and other metadata from the analysis.
+ * Also shows a summary of the currently selected download options.
+ */
 const VideoPreview: React.FC = () => {
   const { analysis, mode, format, res, fps, enableTrim, start, end, subtitles } = useApp();
 
@@ -35,6 +39,10 @@ const VideoPreview: React.FC = () => {
   );
 }
 
+/**
+ * Displays a table of available download formats based on the current filter settings.
+ * Highlights the "best" format that will be chosen by default.
+ */
 const FormatList: React.FC = () => {
   const { analysis, filteredFormats, bestFormat } = useApp();
 
@@ -79,6 +87,9 @@ const FormatList: React.FC = () => {
   );
 }
 
+/**
+ * A component section that groups the video preview and the list of available formats.
+ */
 export const AnalysisSection: React.FC = () => {
   return (
     <div className="lg:col-span-7 space-y-4">

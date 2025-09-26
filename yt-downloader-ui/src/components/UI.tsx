@@ -1,11 +1,19 @@
 import React, { ChangeEvent, ReactNode } from 'react';
 
 type ClassValue = string | boolean | undefined | null;
+/**
+ * A tiny utility for constructing className strings conditionally.
+ * @param classes A list of strings, booleans, or other falsy values.
+ * @returns A string of space-separated class names.
+ */
 export function cx(...classes: ClassValue[]): string {
   return classes.filter(Boolean).join(" ");
 }
 
 type IconProps = React.SVGProps<SVGSVGElement>;
+/**
+ * A collection of simple, inline SVG icons.
+ */
 export const Icon = {
   Paste: (p: IconProps) => <svg viewBox="0 0 24 24" aria-hidden className="size-5" {...p}><path fill="currentColor" d="M19 7h-4V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2m-6 0h-2V5h2z"/></svg>,
   Moon: (p: IconProps) => <svg viewBox="0 0 24 24" aria-hidden className="size-5" {...p}><path fill="currentColor" d="M12 2a9 9 0 0 0 0 18 8.8 8.8 0 0 0 6.32-2.68A7 7 0 0 1 12 4a7 7 0 0 1 0-2"/></svg>,
@@ -23,6 +31,9 @@ interface BadgeProps {
   children: ReactNode;
   color?: 'blue' | 'amber' | 'violet';
 }
+/**
+ * A simple, colored badge component for displaying status or metadata.
+ */
 export const Badge: React.FC<BadgeProps> = ({ children, color = "blue" }) => {
   const colors = {
     blue: "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300",
@@ -33,12 +44,15 @@ export const Badge: React.FC<BadgeProps> = ({ children, color = "blue" }) => {
 }
 
 interface SelectProps {
-  label: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   options: { value: string; label: string }[];
   small?: boolean;
 }
+/**
+ * A styled select dropdown component.
+ */
 export const Select: React.FC<SelectProps> = ({ label, value, onChange, options, small = false }) => {
   return (
     <div className={small ? "" : "flex-1"}>
@@ -59,6 +73,9 @@ interface TextFieldProps {
   value: string;
   onChange: (value: string) => void;
 }
+/**
+ * A styled text input field component.
+ */
 export const TextField: React.FC<TextFieldProps> = ({ label, placeholder, value, onChange }) => {
   return (
     <div className="flex-1">
@@ -71,4 +88,7 @@ export const TextField: React.FC<TextFieldProps> = ({ label, placeholder, value,
 interface KbdProps {
   children: ReactNode;
 }
+/**
+ * A component for rendering keyboard-style keys.
+ */
 export const Kbd: React.FC<KbdProps> = ({ children }) => <kbd className="px-2 py-1 text-xs font-semibold text-slate-800 bg-slate-100 border border-slate-200 rounded-md dark:bg-slate-900 dark:text-slate-200 dark:border-slate-700">{children}</kbd>;

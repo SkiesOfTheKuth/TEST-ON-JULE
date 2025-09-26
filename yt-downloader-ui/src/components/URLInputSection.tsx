@@ -4,6 +4,10 @@ import { useApp } from '../context/AppContext';
 
 function prevent(e: React.SyntheticEvent) { e.preventDefault(); }
 
+/**
+ * A component section for handling all user input related to YouTube URLs.
+ * This includes the main URL input, clipboard paste, and a drag-and-drop area for multiple URLs.
+ */
 export const URLInputSection: React.FC = () => {
   const {
     url, setUrl,
