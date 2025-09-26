@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon, Select, TextField } from './UI';
 import { useApp } from '../context/AppContext';
+import type { DownloadOptions } from '../types';
 
 /**
  * A component section that displays all user-configurable download options.
@@ -34,7 +35,7 @@ export const OptionsSection: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/70 dark:border-slate-800/70 bg-white dark:bg-slate-950 p-4 sm:p-6 shadow-sm">
         <h3 className="font-semibold mb-3">Download options</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Select label="Mode" value={mode} onChange={(v) => setMode(v as any)} options={[{ value: "video+audio", label: "Video + Audio" }, { value: "video-only", label: "Video only" }, { value: "audio-only", label: "Audio only" }]}/>
+          <Select label="Mode" value={mode} onChange={(v) => setMode(v as DownloadOptions['mode'])} options={[{ value: "video+audio", label: "Video + Audio" }, { value: "video-only", label: "Video only" }, { value: "audio-only", label: "Audio only" }]}/>
           <Select label="Container" value={format} onChange={setFormat} options={[{ value: "auto", label: "Auto" }, { value: "mp4", label: "MP4" }, { value: "webm", label: "WebM" }, { value: "m4a", label: "M4A" }, { value: "mp3", label: "MP3" }, { value: "opus", label: "Opus" }]}/>
           <Select label="Resolution" value={res} onChange={setRes} options={[{ value: "auto", label: "Auto" }, { value: "2160p", label: "4K" }, { value: "1440p", label: "2K" }, { value: "1080p", label: "1080p" }, { value: "720p", label: "720p" }]}/>
           <Select label="Frame rate" value={fps} onChange={setFps} options={[{ value: "auto", label: "Auto" }, { value: "60", label: "60 fps" }, { value: "30", label: "30 fps" }]}/>

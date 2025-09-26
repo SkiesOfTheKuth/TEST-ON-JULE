@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useUI } from '../hooks/useUI';
 import { useAnalysis } from '../hooks/useAnalysis';
 import { useDownloadOptions } from '../hooks/useDownloadOptions';
@@ -42,12 +42,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const queueState = useQueue(analysisState, options);
 
   // --- Final Context Value ---
+  const qaTests = useMemo(() => runQATests(), []);
+
   const value: AppContextType = {
     ...ui,
     ...analysisState,
     ...options,
     ...queueState,
-    qaTests: runQATests(),
+    qaTests,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

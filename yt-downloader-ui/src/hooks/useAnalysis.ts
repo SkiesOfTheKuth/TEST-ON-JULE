@@ -40,9 +40,13 @@ export function useAnalysis() {
     try {
       const meta = await simulateAnalyze(u);
       setAnalysis(meta);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setAnalysis(null);
-      setError(err.message || 'Failed to analyze URL');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred during analysis.');
+      }
     } finally {
       setAnalyzing(false);
     }

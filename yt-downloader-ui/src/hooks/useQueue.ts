@@ -117,7 +117,7 @@ export function useQueue(analysisState: AnalysisStateForQueue, options: OptionsS
     };
     setQueue(prev => [newItem, ...prev]);
     addToast('Added to queue!', 'success');
-  }, [analysisState, options, addToast]);
+  }, [analysisState.analysis, analysisState.setError, options.trimState, options.buildOptions, addToast]);
 
   return {
     queue,

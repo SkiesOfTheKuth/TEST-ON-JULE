@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { parseHMS, previewFilename } from '../utils';
 import type { Analysis, Format, Subtitles, ThumbnailOptions, DownloadOptions } from '../types';
@@ -86,7 +86,7 @@ export function useDownloadOptions(analysis: Analysis | null) {
    * @param meta The video analysis object.
    * @returns The fully constructed DownloadOptions object.
    */
-  const buildOptions = (meta: Analysis): DownloadOptions => {
+  const buildOptions = useCallback((meta: Analysis): DownloadOptions => {
     const fmt = bestFormat;
     return {
       mode, container: format === 'auto' ? (fmt?.container || 'mp4') : format,
@@ -96,7 +96,10 @@ export function useDownloadOptions(analysis: Analysis | null) {
       trim: enableTrim ? { start: parseHMS(start) || 0, end: parseHMS(end) || null } : null,
       subtitles, thumbnail: thumb, filenameTpl, sanitize,
     };
-  };
+  }, [
+    bestFormat, mode, format, res, fps, abr, enableTrim, start, end,
+    subtitles, thumb, filenameTpl, sanitize
+  ]);
 
   return {
     mode, setMode,
