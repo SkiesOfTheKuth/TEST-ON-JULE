@@ -1,6 +1,6 @@
 import pytest
 
-from python_starter_project.math import add, divide, multiply, subtract
+from python_starter_project.math import add, divide, multiply, power, subtract
 
 
 def test_add():
@@ -35,3 +35,10 @@ def test_divide_by_zero():
     """Tests division by zero."""
     with pytest.raises(ValueError):
         divide(10, 0)
+
+
+def test_power():
+    """Tests the power function."""
+    assert power(2, 3) == 8
+    assert power(5, 0) == 1
+    assert power(-2, 3) == -8

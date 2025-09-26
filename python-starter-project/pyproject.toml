@@ -10,6 +10,9 @@ requires-python = ">=3.12"
 dependencies = [
 ]
 
+[project.scripts]
+calculator = "python_starter_project.cli:main"
+
 [tool.poetry]
 packages = [{include = "python_starter_project", from = "src"}]
 
