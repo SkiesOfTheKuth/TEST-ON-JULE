@@ -23,15 +23,6 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-# Enable the Pyflakes (`F`) and pycodestyle (`E`) rules by default.
-# B for bugbear
-select = ["E", "F", "B"]
-ignore = []
-
-# Allow autofix for all enabled rules (when `--fix`) is used.
-fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
-unfixable = []
-
 # Exclude a few common directories.
 exclude = [
     ".bzr",
@@ -57,6 +48,16 @@ exclude = [
 
 # Same as Black.
 line-length = 88
+
+[tool.ruff.lint]
+# Enable the Pyflakes (`F`) and pycodestyle (`E`) rules by default.
+# B for bugbear
+select = ["E", "F", "B"]
+ignore = []
+
+# Allow autofix for all enabled rules (when `--fix`) is used.
+fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+unfixable = []
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
