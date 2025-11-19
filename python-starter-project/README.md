@@ -1,40 +1,61 @@
 # Python Starter Project
 
-This is a starter project for a Python application. It includes a basic project structure, a simple math function, and tools for development and testing.
+Production-ready template for Python services. Provides opinionated tooling for testing, linting, structured logging, and
+containerization.
 
-## Installation
+## Features
+- Poetry-managed dependencies targeting Python 3.12.
+- Pre-configured linting and formatting via Ruff.
+- Structured JSON logging and environment-based configuration with validation.
+- GitHub Actions CI pipeline with quality gates.
+- Dockerfile with healthcheck for consistent deployments.
+- Documentation set covering architecture, operations, security, and migrations.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/python-starter-project.git
-   cd python-starter-project
-   ```
+## Getting Started
 
-2. **Install dependencies using Poetry:**
-   ```bash
-   poetry install
-   ```
-
-## Usage
-
-The project includes a simple `add` function that adds two integers.
-
-```python
-from python_starter_project.math import add
-
-result = add(2, 3)
-print(result)  # Output: 5
-```
-
-To run the tests:
 ```bash
-poetry run pytest
+poetry install --sync
+cp .env.example .env
+make lint typecheck test
 ```
+
+## Running the Application
+
+```bash
+poetry run python -m python_starter_project
+```
+
+Docker workflow:
+```bash
+make docker-build
+docker run --rm --env-file .env python-starter-project
+```
+
+## Testing & Quality Gates
+
+- `make lint` – Static analysis via Ruff.
+- `make typecheck` – Static type analysis via mypy (install `mypy` locally or in your Poetry env).
+- `make test` – pytest suite.
+- `make coverage` – Requires the optional `pytest-cov` plugin for coverage reports.
+
+## Configuration
+Configuration values are managed through environment variables (prefixed with `APP_`). See `.env.example` for defaults.
+
+## Documentation
+Key docs live at the repository root and under `docs/`:
+- [Architecture Overview](ARCHITECTURE.md)
+- [Operations Runbook](OPERATIONS.md)
+- [Security Policy](SECURITY.md)
+- [Observability Plan](docs/observability.md)
+- [Migrations Guide](MIGRATIONS.md)
+- [Developer Onboarding](docs/onboarding.md)
 
 ## Contributing
-
-Contributions are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute to this project.
+1. Fork and branch from `main`.
+2. Implement changes with tests.
+3. Run `make lint typecheck test` and ensure CI passes.
+4. Update documentation and `CHANGELOG.md` as needed.
+5. Submit PR with context and rollback plan.
 
 ## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+[MIT](LICENSE)

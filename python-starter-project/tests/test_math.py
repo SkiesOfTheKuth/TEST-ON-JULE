@@ -1,6 +1,7 @@
 from python_starter_project.math import add
 
-def test_add():
+
+def test_add() -> None:
     """Tests the add function."""
     assert add(2, 3) == 5
     assert add(-1, 1) == 0
